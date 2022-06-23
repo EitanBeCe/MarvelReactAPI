@@ -1,6 +1,8 @@
 import { Component } from 'react/cjs/react.production.min';
 import './charInfo.scss';
 
+import PropTypes from 'prop-types';
+
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton'
@@ -129,6 +131,10 @@ const View = ({char}) => {
             </ul>
         </>
     )
+}
+
+CharInfo.propTypes = {
+    charId: PropTypes.number // проветрка, этот проп должен быть числом
 }
 
 export default CharInfo;
