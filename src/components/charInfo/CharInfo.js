@@ -1,4 +1,4 @@
-import { Component } from 'react/cjs/react.production.min';
+
 import './charInfo.scss';
 
 import PropTypes from 'prop-types';
@@ -7,80 +7,63 @@ import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Skeleton from '../skeleton/Skeleton'
 import MarvelService from '../../services/MarvelService';
+import { useEffect, useState } from 'react';
 
-class CharInfo extends Component {
-    
-    state = {
-        char: null,
-        loading: false,
-        error: false
-    }
+const CharInfo = (props) => {
 
-    marvelService = new MarvelService(); 
+    const [char, setChar] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
-    componentDidMount() {
-        this.updateChar();
-    }
+    const marvelService = new MarvelService(); 
 
-    componentDidUpdate(prevProps) {
-        if (this.props.charId !== prevProps.charId) {
-            this.updateChar();
-        }
-    }
+    useEffect(() => {
+        updateChar();
+    }, [props.charId]);
 
-    updateChar = () => {
-        const {charId} = this.props;
+    const updateChar = () => {
+        const {charId} = props;
         if(!charId) {return};
-        this.onCharLoading();
-        this.marvelService
+        
+        onCharLoading();
+        marvelService
             .getCharacter(charId)
-            .then(this.onCharLoaded)
-            .catch(this.onError)
+            .then(onCharLoaded)
+            .catch(onError)
     }
 
         // сработает как char загрузится, а лодинг остановится
-        onCharLoaded = (char) => {
-            this.setState({
-                char, // равно char: char
-                loading: false
-            }) 
+        const onCharLoaded = (char) => {
+            setChar(char);
+            setLoading(false);
         }
 
         //для клика апдейта Try It
-        onCharLoading = () => {
-            this.setState({
-                loading: true
-            })
+        const onCharLoading = () => {
+            setLoading(true);
         }
 
-        onError = () => {
-            this.setState({
-                loading: false,
-                error: true
-            }) 
+        const onError = () => {
+            setLoading(false);
+            setError(true);
         }
 
 
 
+    const skeleton = char || loading || error ? null : <Skeleton/>;
+    // выдача ошибки или загрузки или контента
+    const errorMessage = error ? <ErrorMessage/> : null;
+    const spinner = loading ? <Spinner/> : null;
+    const content = !(loading || error || !char) ? <View char={char}/> : null;
 
-    render() {
-        const {char, loading, error} = this.state;
-
-        const skeleton = char || loading || error ? null : <Skeleton/>;
-        // выдача ошибки или загрузки или контента
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const content = !(loading || error || !char) ? <View char={char}/> : null;
-
-        return (
-            <div className="char__info">
-                {skeleton}
-                {errorMessage}
-                {spinner}
-                {content}
-            </div>
-        )
-    }
+    return (
+        <div className="char__info">
+            {skeleton}
+            {errorMessage}
+            {spinner}
+            {content}
+        </div>
+    )
 }
 
 // простой рендерящий компонент, просто выдает инфу
