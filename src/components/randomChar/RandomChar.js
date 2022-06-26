@@ -1,20 +1,17 @@
-import MarvelService from '../../services/MarvelService';
- 
-import './randomChar.scss';
-//import thor from '../../resources/img/thor.jpeg'; //это не импорт thor, а так засовываем ссылку в переменную
-import mjolnir from '../../resources/img/mjolnir.png';
+import { useEffect, useState } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import { useEffect, useState } from 'react';
+import useMarvelService from '../../services/MarvelService';
+ 
+import mjolnir from '../../resources/img/mjolnir.png';
+import './randomChar.scss';
+
+
 
 const RandomChar = () => {
     
     const [char, setChar] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-
-    // это новое свойство внутри класса RandomChar. Поле класса
-    const marvelService = new MarvelService(); 
+    const {loading, error, getCharacter, clearError} = useMarvelService(); 
 
     useEffect(() => {
         updateChar();
@@ -25,37 +22,23 @@ const RandomChar = () => {
         }
     }, [])
     
-
     // сработает как char загрузится, а лодинг остановится
     const onCharLoaded = (char) => {
         setChar(char);
-        setLoading(false);
-    }
-
-    //для клика апдейта Try It
-    const onCharLoading = () => {
-        setLoading(true);
-    }
-
-    const onError = () => {
-        setLoading(false);
-        setError(true);
     }
 
     const updateChar = () => {
+        clearError();
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000); //получать персов в диапазоне
         // 1017100
-        onCharLoading();
-        marvelService
-            .getCharacter(id)
-            .then(onCharLoaded)
-            .catch(onError)
+        getCharacter(id)
+            .then(onCharLoaded);
     }
 
     // выдача ошибки или загрузки или контента
     const errorMessage = error ? <ErrorMessage/> : null;
     const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) ? <View char={char}/> : null;
+    const content = !(loading || error || !char) ? <View char={char} /> : null;
         
 
     return (
@@ -85,8 +68,10 @@ const RandomChar = () => {
 // простой рендерящий компонент, просто выдает инфу
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki} = char;
-    let imgStyle;
-    (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') ? imgStyle = {'objectFit': 'contain'} : imgStyle= {'objectFit': 'cover'}
+    let imgStyle = {'objectFit' : 'cover'};
+    if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+        imgStyle = {'objectFit' : 'contain'};
+    }
 
     return (
         <div className="randomchar__block">

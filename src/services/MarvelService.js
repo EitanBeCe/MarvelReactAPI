@@ -1,36 +1,27 @@
-//import { __esModule } from "@testing-library/jest-dom/dist/matchers";
+import {useHttp} from '../hooks/http.hook'
 
 // класс ничего не наследует, тк будет на чистом js
-class MarvelService {
+const useMarvelService = () => {
+
+    const {loading, request, error, clearError} = useHttp();
     
-    _apiBase = 'https://gateway.marvel.com:443/v1/public/';
-    _apiKey = 'apikey=b7ff5c83df16ffa569f250853078eeea';
-    _baseOffset = 210;
-    
-    // async ставится перед функцией
-    getResource = async (url) => {
-        let res = await fetch(url);
-    
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
-        }
-    
-        return await res.json(); // json возвращает промис
-    }
+    const _apiBase = 'https://gateway.marvel.com:443/v1/public/';
+    const _apiKey = 'apikey=b7ff5c83df16ffa569f250853078eeea';
+    const _baseOffset = 210;
 
     // тут юзается API ссылка с сайта      по умолчанию
-    getAllCharacters = async (offset = this._baseOffset) => {
-        const res = await this.getResource(`${this._apiBase}characters?limit=9&offset=${offset}&${this._apiKey}`);
-        return res.data.results.map(this._transformCharachter);
+    const getAllCharacters = async (offset = _baseOffset) => {
+        const res = await request(`${_apiBase}characters?limit=9&offset=${offset}&${_apiKey}`);
+        return res.data.results.map(_transformCharacter);
     }
 
-    getCharacter = async (id) => {
-        const res = await this.getResource(`${this._apiBase}characters/${id}?${this._apiKey}`);
-        return this._transformCharachter(res.data.results[0]);
+    const getCharacter = async (id) => {
+        const res = await request(`${_apiBase}characters/${id}?${_apiKey}`);
+        return _transformCharacter(res.data.results[0]);
     }
 
     //ограничить инфу о персе, не получать все что только о нем есть
-    _transformCharachter = (char) => {
+    const _transformCharacter = (char) => {
         return {
             id: char.id,
             name: char.name,
@@ -41,6 +32,8 @@ class MarvelService {
             comics: char.comics.items
         }
     }
+
+    return {loading, error, clearError, getCharacter, getAllCharacters};
 }
 
-export default MarvelService;
+export default useMarvelService;
