@@ -38,10 +38,11 @@ const CharList = (props) => {
         }
 
         //колбек тк зависит от предыдущего стейта, подгружает ЕЩЕ 9 персов
-        setCharList(charList => [...charList, ...newCharList]);
-        setNewItemLoading(newItemLoading => false);
+        setCharList([...charList, ...newCharList]);
+        // setCharList(charList => [...charList, ...newCharList]);
+        setNewItemLoading(false);
         setOffset(offset => offset + 9);
-        setCharEnded(charEnded => ended);
+        setCharEnded(ended);
     }
 
     // работа с рефами, выделение в верстке того, на что кликнули, урок 159
