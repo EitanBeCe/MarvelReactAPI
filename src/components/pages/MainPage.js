@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet"; //сделать метатеги к каждой странице,  SEO
 import { useState } from "react";
 
 import RandomChar from "../randomChar/RandomChar";
@@ -23,6 +24,13 @@ const MainPage = () => {
 
     return(
         <>
+            <Helmet>
+                <meta
+                    name="description"
+                    content="Marvel information portal"
+                    />
+                <title>Marvel information portal</title>
+            </Helmet>
             <ErrorBoundary>
                 <RandomChar/>
             </ErrorBoundary>

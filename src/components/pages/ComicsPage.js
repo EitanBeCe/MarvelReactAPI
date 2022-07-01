@@ -1,13 +1,21 @@
 import ComicsList from "../comicsList/ComicsList";
 import AppBanner from "../appBanner/AppBanner";
+import { Helmet } from "react-helmet";
 
 
 
 const ComicsPage = () => {
     return(
         <>
-        <AppBanner/>
-        <ComicsList/>
+            <Helmet>
+                <meta
+                    name="description"
+                    content="Page with comics list"
+                />
+                <title>Comics page</title>
+            </Helmet>
+            <AppBanner/>
+            <ComicsList/>
         </>
     )
 }
