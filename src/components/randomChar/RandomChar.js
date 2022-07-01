@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
+
+import { CSSTransition } from 'react-transition-group';
  
 import mjolnir from '../../resources/img/mjolnir.png';
 import './randomChar.scss';
@@ -15,11 +17,11 @@ const RandomChar = () => {
 
     useEffect(() => {
         updateChar();
-        const timerId = setInterval(updateChar, 60000);
+        // const timerId = setInterval(updateChar, 60000);
 
-        return () => {
-            clearInterval(timerId)
-        }
+        // return () => {
+        //     clearInterval(timerId)
+        // }
     }, [])
     
     // сработает как char загрузится, а лодинг остановится
