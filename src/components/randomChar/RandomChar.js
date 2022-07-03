@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import Spinner from '../spinner/Spinner';
-import ErrorMessage from '../errorMessage/ErrorMessage';
 import useMarvelService from '../../services/MarvelService';
+import setContent from '../../utils/setContent';
 
-import { CSSTransition } from 'react-transition-group';
  
 import mjolnir from '../../resources/img/mjolnir.png';
 import './randomChar.scss';
@@ -13,15 +11,16 @@ import './randomChar.scss';
 const RandomChar = () => {
     
     const [char, setChar] = useState(null);
-    const {loading, error, getCharacter, clearError} = useMarvelService(); 
+    const {getCharacter, clearError, process, setProcess} = useMarvelService(); 
 
     useEffect(() => {
         updateChar();
-        // const timerId = setInterval(updateChar, 60000);
+        const timerId = setInterval(updateChar, 60000);
 
-        // return () => {
-        //     clearInterval(timerId)
-        // }
+        return () => {
+            clearInterval(timerId)
+        }
+        // eslint-disable-next-line
     }, [])
     
     // сработает как char загрузится, а лодинг остановится
@@ -34,20 +33,20 @@ const RandomChar = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000); //получать персов в диапазоне
         // 1017100
         getCharacter(id)
-            .then(onCharLoaded);
+            .then(onCharLoaded)
+            .then(() => setProcess('confirmed'));
     }
 
-    // выдача ошибки или загрузки или контента
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error || !char) ? <View char={char} /> : null;
+    // //заменено на setContent(автоматы)
+    // // выдача ошибки или загрузки или контента
+    // const errorMessage = error ? <ErrorMessage/> : null;
+    // const spinner = loading ? <Spinner/> : null;
+    // const content = !(loading || error || !char) ? <View char={char} /> : null;
         
 
     return (
         <div className="randomchar">
-            {errorMessage}
-            {spinner}
-            {content}
+            {setContent(process, View, char)}
             <div className="randomchar__static">
                 <p className="randomchar__title">
                     Random character for today!<br/>
@@ -68,8 +67,8 @@ const RandomChar = () => {
 }
 
 // простой рендерящий компонент, просто выдает инфу
-const View = ({char}) => {
-    const {name, description, thumbnail, homepage, wiki} = char;
+const View = ({data}) => {
+    const {name, description, thumbnail, homepage, wiki} = data;
     let imgStyle = {'objectFit' : 'cover'};
     if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
         imgStyle = {'objectFit' : 'contain'};

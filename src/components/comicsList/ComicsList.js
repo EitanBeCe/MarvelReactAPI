@@ -7,6 +7,25 @@ import ErrorMessage from '../errorMessage/ErrorMessage';
 
 import './comicsList.scss';
 
+
+
+
+//не берем универсальную из setContent.js. Тк тут есть другая логика. Нам не нужен спинер на весь лист, когда ты нажал на кнопку подзакрузки новых комиксов
+const setContent = (process, Component, newItemLoading) => {
+    switch (process) {
+        case 'waiting':
+            return <Spinner/>;
+        case 'loading':
+            return newItemLoading ? <Component/> : <Spinner/>;
+        case 'confirmed':
+            return <Component/>;
+        case 'error':
+            return <ErrorMessage/>;
+        default:
+            throw new Error('Unexpected process state');
+    }
+}
+
 const ComicsList = () => {
 
     const [comicsList, setComicsList] = useState([]);
@@ -14,16 +33,18 @@ const ComicsList = () => {
     const [offset, setOffset] = useState(0);
     const [comicsEnded, setComicsEnded] = useState(false);
 
-    const {loading, error, getAllComics} = useMarvelService();
+    const {getAllComics, process, setProcess} = useMarvelService();
 
     useEffect(() => {
         onRequest(offset, true);
+        // eslint-disable-next-line
     }, [])
 
     const onRequest = (offset, initial) => {
         initial ? setnewItemLoading(false) : setnewItemLoading(true);
         getAllComics(offset)
             .then(onComicsListLoaded)
+            .then(() => setProcess('confirmed'))
     }
 
     const onComicsListLoaded = (newComicsList) => {
@@ -57,16 +78,14 @@ const ComicsList = () => {
         )
     }
 
-    const items = renderItems(comicsList);
-
-    const errorMessage = error ? <ErrorMessage/> : null;
-    const spinner = loading && !newItemLoading ? <Spinner/> : null;
+    // заменено на setContent (автоматы)
+    // const items = renderItems(comicsList);
+    // const errorMessage = error ? <ErrorMessage/> : null;
+    // const spinner = loading && !newItemLoading ? <Spinner/> : null;
 
     return (
         <div className="comics__list">
-            {errorMessage}
-            {spinner}
-            {items}
+            {setContent(process, ()=>renderItems(comicsList), newItemLoading)}
             <button 
                 disabled={newItemLoading} 
                 style={{'display' : comicsEnded ? 'none' : 'block'}}
