@@ -95,6 +95,7 @@ const CharList = (props) => {
             }
             
             return (
+                // транзишон не работает, насколько я помню из-за ошибок helmet и колбэка которым это решили, 188
                 <CSSTransition key={item.id} timeout={700} classNames="char__item">
                     <li 
                         className="char__item"

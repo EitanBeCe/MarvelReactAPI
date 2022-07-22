@@ -5,6 +5,7 @@ import RandomChar from "../randomChar/RandomChar";
 import CharList from "../charList/CharList";
 import CharInfo from "../charInfo/CharInfo";
 import CharSearchForm from "../charSearchForm/CharSearchForm";
+import './mainPage.scss';
 
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 
@@ -38,7 +39,7 @@ const MainPage = () => {
                 <ErrorBoundary>
                     <CharList onCharSelected={onCharSelected}/>
                 </ErrorBoundary>
-                <div>
+                <div className="aside">
                     <ErrorBoundary>
                         <CharInfo charId={selectedChar}/>
                     </ErrorBoundary>
