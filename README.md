@@ -1,3 +1,8 @@
+- A side project created for showing a customer Marvel characters and comics in a nice way, using Marvel API.
+- Written on React.js.
+- Challenges included User Hooks, work with server and API, React Router, CSS Transition Group etc.
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
