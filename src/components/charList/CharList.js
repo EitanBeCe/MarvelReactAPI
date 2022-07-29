@@ -32,7 +32,6 @@ const CharList = (props) => {
     const [charEnded, setCharEnded] = useState(false);
 
     const { getAllCharacters, process, setProcess } = useMarvelService();
-    //randomChar = new RandomChar();
 
     // instead componentDidMount()
     useEffect(() => {
@@ -130,7 +129,7 @@ const CharList = (props) => {
     // const errorMessage = error ? <ErrorMessage/> : null;
     // const spinner = loading && !newItemLoading ? <Spinner/> : null;
 
-    // fils of bug from lesson 188
+    // fixs of bug from lesson 188
     const elements = useMemo(() => {
         return setContent(process, () => renderItems(charList), newItemLoading);
         // eslint-disable-next-line
