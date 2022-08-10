@@ -1,7 +1,7 @@
-- A side project created for showing a customer Marvel characters and comics in a nice way, using Marvel API.
-- Written on React.js.
-- Challenges included User Hooks, work with server and API, React Router, CSS Transition Group etc.
-
+- A side project created for displaying Marvel
+  characters and comics in a nice way, using Marvel API.
+- Challenges included User Hooks, work with server and API.
+- Technologies: React Router, React Transition Group, Helmet, Formik etc.
 
 # Getting Started with Create React App
 
